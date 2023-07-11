@@ -1,0 +1,11 @@
+%page {
+  @extend %cover;
+
+  opacity: 0;
+  visibility: hidden;
+  z-index: z('content');
+}
+
+%page_wrapper {
+  color: inherit;
+}

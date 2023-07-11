@@ -1,0 +1,2 @@
+export const COLOR_BRIGHT_GRAY = '#36384C'
+export const COLOR_QUARTER_SPANISH_WHITE = '#F6F1E7'
