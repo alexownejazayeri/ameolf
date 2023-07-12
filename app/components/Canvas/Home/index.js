@@ -207,6 +207,5 @@ export default class {
    */
   destroy () {
     this.scene.removeChild(this.group)
-    console.log('destruction happening')
   }
 }

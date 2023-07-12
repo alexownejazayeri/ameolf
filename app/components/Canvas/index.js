@@ -182,6 +182,7 @@ export default class Canvas {
     }
 
     if (template === 'home') {
+      this.destroyHome()
       this.createHome()
     } else {
       this.destroyHome()

@@ -126,7 +126,6 @@ const handleRequest = async () => {
 }
 
 app.get('/', async (req, res) => {
-  console.log('getting home with express')
   const defaults = await handleRequest()
 
   res.render('pages/home', { ...defaults })

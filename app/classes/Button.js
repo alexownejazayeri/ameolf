@@ -6,25 +6,42 @@ export default class Button extends Component {
   constructor ({ element }) {
     super({ element })
 
-    this.path = element.querySelector('path:last-child')
-    this.pathLength = this.path.getTotalLength()
-
     this.timeline = GSAP.timeline({ paused: true })
+    this.createPath()
+  }
 
-    this.timeline.fromTo(this.path, {
+  createPath () {
+    this.path = this.element.querySelector('path:last-child')
+    this.pathLength = this.path.getTotalLength()
+    this.pathValue = this.pathLength
+
+    GSAP.set(this.path, {
       strokeDashoffset: this.pathLength,
-      strokeDasharray: `${this.pathLength} ${this.pathLength}`
-    }, {
-      strokeDashoffset: 0,
       strokeDasharray: `${this.pathLength} ${this.pathLength}`
     })
   }
 
   onMouseEnter () {
+    this.pathValue -= this.pathLength
+
+    GSAP.to(this.path, {
+      duration: 1,
+      // ease,
+      strokeDashoffset: this.pathValue
+    })
+
     this.timeline.play()
   }
 
   onMouseLeave () {
+    this.pathValue -= this.pathLength
+
+    GSAP.to(this.path, {
+      duration: 1,
+      // ease,
+      strokeDashoffset: this.pathValue
+    })
+
     this.timeline.reverse()
   }
 
