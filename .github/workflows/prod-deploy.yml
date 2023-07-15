@@ -8,7 +8,7 @@ on:
 
 jobs:
     deploy:
-        name: Deploy Develop
+        name: Deploy Production
         runs-on: ubuntu-latest
         env:
             AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
@@ -19,4 +19,3 @@ jobs:
                 node-version: 18
             - run: npm ci
             - run: npx @ampt/cli deploy prod
-
