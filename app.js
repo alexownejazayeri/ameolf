@@ -1,3 +1,6 @@
+const ampt = require('@ampt/sdk')
+const { http, params } = ampt
+
 // the backend
 require('dotenv').config()
 
@@ -9,7 +12,7 @@ const methodOverride = require('method-override')
 
 const app = express()
 const path = require('path')
-const port = process.env.EXPRESS_PORT || 8160
+// const port = process.env.EXPRESS_PORT || 8160
 
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -23,8 +26,15 @@ const prismic = require('@prismicio/client')
 const prismicH = require('@prismicio/helpers')
 const UAParser = require('ua-parser-js')
 
-const repoName = 'amelof' // Fill in your repository name.
-const accessToken = process.env.PRISMIC_ACCESS_TOKEN // If your repository is private, add an access token.
+const repoName = params('PRISMIC_REPO')
+const accessToken = params('PRISMIC_TOKEN')
+
+// Note:
+// If you're pulling this down, comment out the two lines above
+// and use the two lines below, but with your own .env or token
+
+// const repoName = 'amelof' // Fill in your repository name.
+// const accessToken = process.env.PRISMIC_ACCESS_TOKEN // If your repository is private, add an access token.
 
 const client = prismic.createClient(repoName, {
   fetch,
@@ -155,6 +165,8 @@ app.get('/detail/:uid', async (req, res) => {
   })
 })
 
-app.listen(port, () => {
-  console.log(`Floema listening at http://localhost:${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Floema listening at http://localhost:${port}`)
+// })
+
+http.node.use(app)

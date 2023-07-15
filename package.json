@@ -1,11 +1,14 @@
 {
   "name": "floema",
   "version": "1.0.0",
+  "main": "app.js",
   "scripts": {
+    "ampt:build": "webpack --progress --config webpack.config.prod.js",
+    "ampt:dev": "webpack --progress --config webpack.config.dev.js",
     "backend:build": "node app.js",
     "backend:development": "nodemon app.js",
-    "frontend:build": "webpack --progress --config webpack.config.build.js",
-    "frontend:development": "webpack serve --progress --config webpack.config.development.js",
+    "frontend:build": "webpack --progress --config webpack.config.dev.js",
+    "frontend:development": "webpack serve --progress --config webpack.config.dev.js",
     "start": "concurrently --kill-others \"npm run backend:development\" \"npm run frontend:development\""
   },
   "author": "Alex Ownejazayeri",
@@ -35,7 +38,6 @@
     "ogl": "^0.0.117",
     "postcss-loader": "^7.3.2",
     "prefix": "^1.0.0",
-    "pug": "^3.0.2",
     "raw-loader": "^4.0.2",
     "sass": "^1.63.3",
     "sass-loader": "^13.3.1",
@@ -46,6 +48,7 @@
     "webpack-merge": "^5.9.0"
   },
   "dependencies": {
+    "@ampt/sdk": "^0.0.1-beta.52",
     "@prismicio/client": "^7.1.0",
     "@prismicio/helpers": "^2.3.9",
     "body-parser": "^1.20.2",
@@ -56,6 +59,14 @@
     "morgan": "^1.10.0",
     "node-fetch": "^3.3.1",
     "nodemon": "^2.0.22",
+    "pug": "^3.0.2",
     "ua-parser-js": "^1.0.35"
-  }
+  },
+  "ampt": {
+    "org": "personal-projects",
+    "app": "ameolf"
+  },
+  "files": [
+    "*"
+  ]
 }
