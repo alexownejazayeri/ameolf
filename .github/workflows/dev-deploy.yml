@@ -1,6 +1,6 @@
-# .github/workflows/deploy.yml
+# .github/workflows/dev-deploy.yml
 
-name: deploy
+name: dev-deploy
 on:
     push:
         branches:
@@ -19,3 +19,4 @@ jobs:
                 node-version: 18
             - run: npm ci
             - run: npx @ampt/cli deploy dev
+

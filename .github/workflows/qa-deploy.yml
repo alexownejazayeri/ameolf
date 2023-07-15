@@ -1,0 +1,21 @@
+# .github/workflows/qa-deploy.yml
+
+name: qa-deploy
+on:
+    push:
+        branches:
+            - staging
+
+jobs:
+    deploy:
+        name: Deploy Develop
+        runs-on: ubuntu-latest
+        env:
+            AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v1
+              with:
+                node-version: 18
+            - run: npm ci
+            - run: npx @ampt/cli deploy qa
