@@ -8,7 +8,7 @@ on:
 
 jobs:
     deploy:
-        name: Deploy Develop
+        name: Deploy QA-Test
         runs-on: ubuntu-latest
         env:
             AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
