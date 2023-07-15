@@ -4,7 +4,7 @@ name: qa-deploy
 on:
     push:
         branches:
-            - staging
+            - qa
 
 jobs:
     deploy:
