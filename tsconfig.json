@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2023"],
+    "target": "es5",
+    "module": "CommonJS",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "strict": true
+  },
+  // "include": ["app/**/*"], // - include after setting up app.ts
+  "include": ["app.ts"],
+  "exclude": ["node_modules"]
+}
