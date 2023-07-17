@@ -136,7 +136,6 @@ const handleRequest = async () => {
   about.data.body.forEach((aboutPageSection: AboutPageSlice) => {
     if (aboutPageSection.slice_type === 'gallery') {
       aboutPageSection.items.forEach((sectionGalleryImage: GalleryImage) => {
-        console.log({sectionGalleryImage, items: aboutPageSection.items})
           assets.push(sectionGalleryImage.image.url)
       })
     }

@@ -23,7 +23,8 @@ const dirStyles = path.join(__dirname, 'styles')
 const dirNode = 'node_modules'
 
 module.exports = {
-  entry: [path.join(dirApp, 'index.js'), path.join(dirStyles, 'index.scss')],
+  entry: [path.join(dirApp, 'index.ts'), path.join(dirStyles, 'index.scss')],
+
   // Makes import/export clean
   resolve: {
     modules: [dirApp, dirShared, dirStyles, dirNode]
@@ -76,6 +77,10 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader'
       },
       {
         test: /\.scss$/,

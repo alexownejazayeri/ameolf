@@ -10,7 +10,6 @@
     "skipLibCheck": true,
     "strict": true
   },
-  // "include": ["app/**/*"], // - include after setting up app.ts
   "include": ["app.ts"],
   "exclude": ["node_modules"]
 }

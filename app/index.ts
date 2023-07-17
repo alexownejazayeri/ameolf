@@ -1,9 +1,9 @@
 import NormalizeWheel from 'normalize-wheel'
 import each from 'lodash/each'
 
-import Canvas from 'components/Canvas'
-import Navigation from 'components/Navigation'
-import Preloader from 'components/Preloader'
+import Canvas from './components/Canvas'
+import Navigation from './components/Navigation'
+import Preloader from './components/Preloader'
 
 import About from './pages/About'
 import Collections from './pages/Collections'
@@ -11,6 +11,13 @@ import Detail from './pages/Detail'
 import Home from './pages/Home'
 
 class App {
+  canvas: Canvas
+  template: string | null | undefined
+  content: Element | null
+  navigation: Navigation
+  preloader: Preloader
+  pages: { about: About; collections: Collections; detail: Detail; home: Home }
+  page: any // TODO(alex): Replace with 'Page'
   constructor () {
     this.createContent()
 
@@ -35,7 +42,7 @@ class App {
 
   createContent () {
     this.content = document.querySelector('.content')
-    this.template = this.content.getAttribute('data-template')
+    this.template = this.content?.getAttribute('data-template')
   }
 
   createNavigation () {
@@ -59,7 +66,7 @@ class App {
       home: new Home()
     }
 
-    this.page = this.pages[this.template]
+    this.page = this.pages[this.template || 'home']
     this.page.create()
   }
 
@@ -97,16 +104,19 @@ class App {
 
       const divContent = div.querySelector('.content')
 
-      this.template = divContent.getAttribute('data-template')
+      this.template = divContent?.getAttribute('data-template')
 
       this.navigation.onChange(this.template)
 
-      this.content.setAttribute('data-template', this.template)
-      this.content.innerHTML = divContent.innerHTML
+      this.content?.setAttribute('data-template', this.template || 'no template found')
+
+      if (this.content) {
+        this.content.innerHTML = divContent?.innerHTML || ''
+      }
 
       this.canvas.onChangeEnd(this.template)
 
-      this.page = this.pages[this.template]
+      this.page = this.pages[this.template || 'home']
       this.page.create()
 
       this.onResize()
@@ -174,7 +184,7 @@ class App {
       this.canvas.update(this.page.scroll)
     }
 
-    window.requestAnimationFrame(this.update.bind(this)) // Was prev. assigned to 'this.frame' but not sure that's needed?
+    window.requestAnimationFrame(this.update.bind(this))
   }
 
   /**
