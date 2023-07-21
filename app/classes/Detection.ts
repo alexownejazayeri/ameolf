@@ -1,4 +1,10 @@
 class Detection {
+  isMobileChecked: boolean
+  isMobileCheck: boolean
+  isTabletChecked: boolean
+  isTabletCheck: boolean
+  isDesktopChecked: boolean
+  isDesktopCheck: boolean
   isPhone () {
     if (!this.isMobileChecked) {
       this.isMobileChecked = true

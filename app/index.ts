@@ -17,7 +17,7 @@ class App {
   navigation: Navigation
   preloader: Preloader
   pages: { about: About; collections: Collections; detail: Detail; home: Home }
-  page: any // TODO(alex): Replace with 'Page'
+  page: About | Collections | Detail | Home
   constructor () {
     this.createContent()
 

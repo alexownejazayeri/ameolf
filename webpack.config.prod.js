@@ -1,12 +1,12 @@
-const path = require('path')
+import { join } from 'path'
 
-const { merge } = require('webpack-merge')
-const config = require('./webpack.config')
+import { merge } from 'webpack-merge'
+import config from './webpack.config'
 
 module.exports = merge(config, {
   mode: 'production',
 
   output: {
-    path: path.join(__dirname, 'static')
+    path: join(__dirname, 'static')
   }
 })

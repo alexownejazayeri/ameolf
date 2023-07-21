@@ -1,9 +1,9 @@
 import GSAP from 'gsap'
 
-import Animation from 'classes/Animation'
+import Animation from '../classes/Animation'
 
-export default class Paragraph extends Animation {
-  constructor ({ element, elements }) {
+export default class Highlight extends Animation {
+  constructor ({ element, elements }: {element: any; elements: any}) {
     super({
       element,
       elements

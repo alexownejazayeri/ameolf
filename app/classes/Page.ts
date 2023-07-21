@@ -4,16 +4,31 @@ import Prefix from 'prefix'
 import each from 'lodash/each'
 import map from 'lodash/map'
 
-import Label from 'animations/Label'
-import Paragraph from 'animations/Paragraph'
-import Title from 'animations/Title'
+import Label from '../animations/Label'
+import Paragraph from '../animations/Paragraph'
+import Title from '../animations/Title'
 import Highlight from '../animations/Highlight'
 
-import AsyncLoad from 'classes/AsyncLoad'
+import AsyncLoad from '../classes/AsyncLoad'
 
-import { ColorsManager } from 'classes/Colors'
+import { ColorsManager } from '../classes/Colors'
 
 export default class Page {
+  selector: any
+  selectorChildren: any
+  id: any
+  transformPrefix: any
+  element: any
+  scroll: { current: number; target: number; last: number; limit: number }
+  elements: any
+  animations: (Label | Paragraph | Title | Highlight)[]
+  animationsHighlights: Highlight[]
+  animationsTitles: Title[]
+  animationsParagraphs: any
+  animationsLabels: any
+  preloaders: AsyncLoad[]
+  animationIn: any
+  animationOut: gsap.core.Timeline
   constructor ({
     element,
     elements,
@@ -36,7 +51,7 @@ export default class Page {
 
   create () {
     this.element = document.querySelector(this.selector)
-    this.elements = {}
+    this.element = {}
 
     this.scroll = {
       current: 0,
@@ -46,9 +61,10 @@ export default class Page {
     }
 
     each(this.selectorChildren, (entry, key) => {
-      if (entry instanceof window.HTMLElement || entry instanceof window.NodeList) {
+      if (this.elements && (entry instanceof window.HTMLElement || entry instanceof window.NodeList)) {
+        console.log({key})
         this.elements[key] = entry
-      } else {
+      } else if (this.elements) {
         this.elements[key] = document.querySelectorAll(entry)
 
         if (this.elements[key].length === 0) {
@@ -64,59 +80,82 @@ export default class Page {
   }
 
   createAnimations () {
-    this.animations = []
+    if (this.elements) {
 
-    // Highlights
-    this.animationsHighlights = map(this.elements.animationsHighlights, element => {
-      return new Highlight({
-        element
+      this.animations = []
+
+      // Highlights
+      this.animationsHighlights = map(this.elements.animationsHighlights, element => {
+        const elements = this.elements;
+
+        return new Highlight({
+          element,
+          elements
+        })
       })
-    })
 
-    this.animations.push(...this.animationsHighlights)
+      this.animations.push(...this.animationsHighlights)
 
-    // Titles
-    this.animationsTitles = map(this.elements.animationsTitles, element => {
-      return new Title({
-        element
+      // Titles
+      this.animationsTitles = map(this.elements.animationsTitles, element => {
+        const elements = this.elements
+
+        return new Title({
+          element,
+          elements
+        })
       })
-    })
 
-    this.animations.push(...this.animationsTitles)
+      this.animations.push(...this.animationsTitles)
 
-    // Paragraphs
-    this.animationsParagraphs = map(this.elements.animationsParagraphs, element => {
-      return new Paragraph({
-        element
+      // Paragraphs
+      this.animationsParagraphs = map(this.elements.animationsParagraphs, element => {
+        const elements = this.elements
+
+
+        return new Paragraph({
+          element,
+          elements
+        })
       })
-    })
-    this.animations.push(...this.animationsParagraphs)
+      this.animations.push(...this.animationsParagraphs)
 
-    // Labels
-    this.animationsLabels = map(this.elements.animationsLabels, element => {
-      return new Label({
-        element
+      // Labels
+      this.animationsLabels = map(this.elements.animationsLabels, element => {
+        const elements = this.elements
+
+        return new Label({
+          element,
+          elements
+        })
       })
-    })
 
-    this.animations.push(...this.animationsLabels)
+      this.animations.push(...this.animationsLabels)
+    }
   }
 
   createPreloader () {
-    this.preloaders = map(this.elements.preloaders, element => {
-      return new AsyncLoad({ element })
-    })
+    if (this.elements) {
+
+      this.preloaders = map(this.elements.preloaders, element => {
+        const elements = this.elements
+        return new AsyncLoad({ element, elements })
+      })
+    }
   }
 
   /**
    * Animations
    */
-  show (animation) {
-    return new Promise(resolve => {
-      ColorsManager.change({
-        backgroundColor: this.element.getAttribute('data-background'),
-        color: this.element.getAttribute('data-color')
-      })
+  show (animation?: gsap.core.Timeline) {
+    return new Promise<void>(resolve => {
+      if (this.element.getAttribute) {
+
+        ColorsManager.change({
+          backgroundColor: this.element.getAttribute('data-background'),
+          color: this.element.getAttribute('data-color')
+        })
+      }
 
       if (animation) {
         this.animationIn = animation
@@ -156,7 +195,7 @@ export default class Page {
    */
 
   onResize () {
-    if (this.elements.wrapper) {
+    if (this.elements?.wrapper) {
       this.scroll.limit = this.elements.wrapper.clientHeight - window.innerHeight
     }
 
@@ -181,7 +220,7 @@ export default class Page {
 
     this.scroll.current = GSAP.utils.interpolate(this.scroll.current, this.scroll.target, 0.1) // Lower easing is smoother, but at the cost of performance
 
-    if (this.elements.wrapper) {
+    if (this.elements?.wrapper) {
       this.elements.wrapper.style[this.transformPrefix] = `translateY(-${this.scroll.current}px)`
     }
   }

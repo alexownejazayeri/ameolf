@@ -27,7 +27,8 @@ module.exports = {
 
   // Makes import/export clean
   resolve: {
-    modules: [dirApp, dirShared, dirStyles, dirNode]
+    modules: [dirApp, dirShared, dirStyles, dirNode],
+    extensions: ['.ts', '.js', '.glsl']
   },
 
   plugins: [
@@ -129,15 +130,19 @@ module.exports = {
 
       {
         test: /\.(glsl|frag|vert)$/,
-        loader: 'raw-loader',
-        exclude: /node_modules/
-      },
-
-      {
-        test: /\.(glsl|frag|vert)$/,
-        loader: 'glslify-loader',
+        use: ['raw-loader', 'glslify-loader'],
         exclude: /node_modules/
       }
+
+      // {
+      //   test: /\.(glsl|frag|vert)$/,
+      //   loader: 'glslify-loader',
+      //   exclude: /node_modules/
+      // }
+      // {
+      //   test: /\.(glsl|vs|fs)$/,
+      //   loader: 'ts-shader-loader'
+      // }
     ]
   }
 }

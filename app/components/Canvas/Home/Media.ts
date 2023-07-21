@@ -1,13 +1,27 @@
-import { Mesh, Program } from 'ogl'
-
+import { Mesh, Program } from 'ogl-typescript'
 import GSAP from 'gsap'
 
-import fragment from 'shaders/plane-fragment.glsl'
-import vertex from 'shaders/plane-vertex.glsl'
-
-import Detection from 'classes/Detection'
+// @ts-ignore
+import fragment from '../../../shaders/home-fragment.glsl'
+// @ts-ignore
+import vertex from '../../../shaders/home-vertex.glsl'
 
 export default class {
+  element: any
+  geometry: any
+  gl: any
+  index: any
+  scene: any
+  sizes: any
+  extra: { x: number; y: number }
+  texture: any
+  program: any
+  mesh: any
+  bounds: any
+  height: number
+  width: number
+  x: number
+  y: number
   constructor ({ element, geometry, gl, index, scene, sizes }) {
     this.element = element
     this.geometry = geometry
@@ -15,6 +29,10 @@ export default class {
     this.index = index
     this.scene = scene
     this.sizes = sizes
+    this.extra = {
+      x: 0,
+      y: 0
+    }
 
     this.createTexture()
     this.createProgram()
@@ -22,15 +40,10 @@ export default class {
     this.createBounds({
       sizes: this.sizes
     })
-
-    this.extra = {
-      x: 0,
-      y: 0
-    }
   }
 
   createTexture () {
-    const image = this.element.querySelector('img')
+    const image = this.element
 
     this.texture = window.TEXTURES[image.getAttribute('data-src')]
   }
@@ -41,6 +54,8 @@ export default class {
       vertex,
       uniforms: {
         uAlpha: { value: 0 },
+        uSpeed: { value: 0 },
+        uViewportSizes: { value: [this.sizes.width, this.sizes.height] },
         tMap: { value: this.texture }
       }
     })
@@ -53,6 +68,8 @@ export default class {
     })
 
     this.mesh.setParent(this.scene)
+
+    this.mesh.rotation.z = GSAP.utils.random(-Math.PI * 0.03, Math.PI * 0.03)
   }
 
   createBounds ({ sizes }) {
@@ -72,7 +89,7 @@ export default class {
     GSAP.fromTo(this.program.uniforms.uAlpha, {
       value: 0
     }, {
-      value: 1
+      value: 0.4
     })
   }
 
@@ -86,26 +103,19 @@ export default class {
    * Events.
    */
   onResize (sizes, scroll) {
-    this.extra = 0
+    this.extra = {
+      x: 0,
+      y: 0
+    }
 
     this.createBounds(sizes)
-    this.updateX(scroll)
-    this.updateY(0)
+    this.updateX(scroll && scroll.x)
+    this.updateY(scroll && scroll.y)
   }
 
   /**
    * Loop.
    */
-  updateRotation () {
-    this.mesh.rotation.z = GSAP.utils.mapRange(
-      -this.sizes.width / 2,
-      this.sizes.width / 2,
-      Math.PI * 0.1,
-      -Math.PI * 0.1,
-      this.mesh.position.x
-    )
-  }
-
   updateScale () {
     this.height = this.bounds.height / window.innerHeight
     this.width = this.bounds.width / window.innerWidth
@@ -117,22 +127,19 @@ export default class {
   updateX (x = 0) {
     this.x = (this.bounds.left + x) / window.innerWidth
 
-    this.mesh.position.x = (-this.sizes.width / 2) + (this.mesh.scale.x / 2) + (this.x * this.sizes.width) + this.extra
+    this.mesh.position.x = (-this.sizes.width / 2) + (this.mesh.scale.x / 2) + (this.x * this.sizes.width) + this.extra.x
   }
 
   updateY (y = 0) {
     this.y = (this.bounds.top + y) / window.innerHeight
 
-    const extra = Detection.isPhone() ? 15 : 40
-
-    this.mesh.position.y = (this.sizes.height / 2) - (this.mesh.scale.y / 2) - (this.y * this.sizes.height)
-    this.mesh.position.y += Math.cos((this.mesh.position.x / this.sizes.width) * Math.PI * 0.1) * extra - extra
+    this.mesh.position.y = (this.sizes.height / 2) - (this.mesh.scale.y / 2) - (this.y * this.sizes.height) + this.extra.y
   }
 
-  update (scroll) {
-    this.updateRotation()
-    this.updateScale()
-    this.updateX(scroll)
-    this.updateY(0)
+  update (scroll, speed) {
+    this.updateX(scroll.x)
+    this.updateY(scroll.y)
+
+    this.program.uniforms.uSpeed.value = speed
   }
 }

@@ -1,9 +1,10 @@
 import GSAP from 'gsap'
 
-import Button from 'classes/Button'
-import Page from 'classes/Page'
+import Button from '../../classes/Button'
+import Page from '../../classes/Page'
 
 export default class Detail extends Page {
+  link: Button
   constructor () {
     super({
       id: 'detail',
@@ -18,8 +19,10 @@ export default class Detail extends Page {
   create () {
     super.create()
 
+    const elements = this.elements
     this.link = new Button({
-      element: this.elements.button
+      element: this.elements.button,
+      elements
     })
   }
 
@@ -34,7 +37,7 @@ export default class Detail extends Page {
       autoAlpha: 1
     })
 
-    super.show(timeline)
+    return super.show(timeline)
   }
 
   destroy () {

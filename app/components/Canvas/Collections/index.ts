@@ -1,4 +1,4 @@
-import { Plane, Transform } from 'ogl'
+import { Plane, Transform } from 'ogl-typescript'
 import GSAP from 'gsap'
 import Prefix from 'prefix'
 
@@ -7,6 +7,24 @@ import map from 'lodash/map'
 import Media from './Media'
 
 export default class {
+  id: string
+  gl: any
+  scene: any
+  sizes: any
+  transition: any
+  transformPrefix: string
+  group: any
+  galleryElement: any
+  galleryWrapperElement: any
+  titlesElement: any
+  collectionsElements: NodeListOf<Element>
+  collectionsElementsActive: string
+  mediasElements: NodeListOf<Element>
+  scroll: { current: number; direction: string; target: number; start: number; last: number; lerp: number; limit: number; velocity: number }
+  geometry: any
+  medias: Media[]
+  bounds: any
+  index: any
   constructor ({ gl, scene, sizes, transition }) {
     this.id = 'collections'
 
@@ -31,10 +49,12 @@ export default class {
 
     this.scroll = {
       current: 0,
+      direction: '',
       target: 0,
       start: 0,
       last: 0,
       lerp: 0.1,
+      limit: 0,
       velocity: 1
     }
 
@@ -75,16 +95,19 @@ export default class {
       const { src } = this.transition.mesh.program.uniforms.tMap.value.image
       const texture = window.TEXTURES[src]
       const media = this.medias.find(media => media.texture === texture)
-      const scroll = -media.bounds.left - media.bounds.width / 2 + window.innerWidth / 2
+      const scroll = -media?.bounds.left - media?.bounds.width / 2 + window.innerWidth / 2
 
       this.update()
 
       this.transition.animate({
-        position: { x: 0, y: media.mesh.position.y, z: 0 },
-        rotation: media.mesh.rotation,
-        scale: media.mesh.scale
+        position: { x: 0, y: media?.mesh.position.y, z: 0 },
+        rotation: media?.mesh.rotation,
+        scale: media?.mesh.scale
       }, _ => {
-        media.opacity.multiplier = 1
+
+        if (media?.opacity?.multiplier) {
+          media.opacity.multiplier = 1
+        }
 
         map(this.medias, item => {
           if (media !== item) {
@@ -139,7 +162,7 @@ export default class {
   onChange (index) {
     this.index = index
 
-    const selectedCollection = parseInt(this.mediasElements[this.index].getAttribute('data-index'))
+    const selectedCollection = parseInt(this.mediasElements[this.index].getAttribute('data-index') || '')
 
     map(this.collectionsElements, (element, elementIndex) => {
       if (elementIndex === selectedCollection) {

@@ -1,4 +1,4 @@
-import { Camera, Renderer, Transform } from 'ogl'
+import { Camera, Renderer, Transform } from 'ogl-typescript'
 
 import About from './About'
 import Collections from './Collections'
@@ -8,6 +8,22 @@ import Home from './Home'
 import Transition from './Transition'
 
 export default class Canvas {
+  template: any
+  x: { start: number; distance: number; end: number }
+  y: { start: number; distance: number; end: number }
+  renderer: any
+  gl: any
+  camera: any
+  scene: any
+  home: Home
+  sizes: any
+  about: About
+  collections: Collections
+  transition: any
+  detail: Detail
+  isFromCollectionsToDetail: boolean
+  isFromDetailToCollections: boolean
+  isDown: boolean
   constructor ({ template }) {
     this.template = template
 
@@ -65,7 +81,7 @@ export default class Canvas {
     if (!this.home) return
 
     this.home.destroy()
-    this.home = null
+    // this.home = null TODO(alex): come back to this
   }
 
   /**
@@ -83,7 +99,7 @@ export default class Canvas {
     if (!this.about) return
 
     this.about.destroy()
-    this.about = null
+    // this.about = null TODO(alex): come back to this
   }
 
   /**
@@ -102,7 +118,7 @@ export default class Canvas {
     if (!this.collections) return
 
     this.collections.destroy()
-    this.collections = null
+    // this.collections = null TODO(alex): come back to this
   }
 
   /**
@@ -121,7 +137,7 @@ export default class Canvas {
     if (!this.detail) return
 
     this.detail.destroy()
-    this.detail = null
+    // this.detail = null TODO(alex): come back to this
   }
 
   /**
@@ -228,7 +244,7 @@ export default class Canvas {
     }
   }
 
-  onTouchDown (event) {
+  onTouchDown (event: any) {
     this.isDown = true
 
     this.x.start = event.touches ? event.touches[0].clientX : event.clientX
@@ -252,7 +268,7 @@ export default class Canvas {
     }
   }
 
-  onTouchMove (event) {
+  onTouchMove (event: any) {
     if (!this.isDown) return
 
     const x = event.touches ? event.touches[0].clientX : event.clientX
@@ -283,7 +299,7 @@ export default class Canvas {
     }
   }
 
-  onTouchUp (event) {
+  onTouchUp (event: any) {
     this.isDown = false
 
     const x = event.changedTouches ? event.changedTouches[0].clientX : event.clientX
@@ -314,7 +330,7 @@ export default class Canvas {
     }
   }
 
-  onWheel (event) {
+  onWheel (event: any) {
     if (this.home) {
       this.home.onWheel(event)
     }
