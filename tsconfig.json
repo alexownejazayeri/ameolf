@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    // "forceConsistentCasingInFileNames": true,
+    "lib": ["es2023", "dom"],
+    "target": "es5",
+    "module": "CommonJS",
+    "moduleResolution": "NodeNext",
+    "noImplicitAny": false,
+    "noEmitOnError": false,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "strictPropertyInitialization": false,
+  },
+  "include": ["app.ts"],
+  "exclude": ["node_modules"]
+}

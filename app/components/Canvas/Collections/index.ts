@@ -1,4 +1,4 @@
-import { Plane, Transform } from 'ogl'
+import { Plane, Texture, Transform } from 'ogl-typescript'
 import GSAP from 'gsap'
 import Prefix from 'prefix'
 
@@ -6,7 +6,32 @@ import map from 'lodash/map'
 
 import Media from './Media'
 
+declare global {
+  interface Window {
+      ASSETS: string[];
+      TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
+  }
+}
+
 export default class {
+  id: string
+  gl: any
+  scene: any
+  sizes: any
+  transition: any
+  transformPrefix: string
+  group: any
+  galleryElement: any
+  galleryWrapperElement: any
+  titlesElement: any
+  collectionsElements: NodeListOf<Element>
+  collectionsElementsActive: string
+  mediasElements: NodeListOf<Element>
+  scroll: { current: number; direction: string; target: number; start: number; last: number; lerp: number; limit: number; velocity: number }
+  geometry: any
+  medias: Media[]
+  bounds: any
+  index: any
   constructor ({ gl, scene, sizes, transition }) {
     this.id = 'collections'
 
@@ -31,10 +56,12 @@ export default class {
 
     this.scroll = {
       current: 0,
+      direction: '',
       target: 0,
       start: 0,
       last: 0,
       lerp: 0.1,
+      limit: 0,
       velocity: 1
     }
 
@@ -75,16 +102,19 @@ export default class {
       const { src } = this.transition.mesh.program.uniforms.tMap.value.image
       const texture = window.TEXTURES[src]
       const media = this.medias.find(media => media.texture === texture)
-      const scroll = -media.bounds.left - media.bounds.width / 2 + window.innerWidth / 2
+      const scroll = -media?.bounds.left - media?.bounds.width / 2 + window.innerWidth / 2
 
       this.update()
 
       this.transition.animate({
-        position: { x: 0, y: media.mesh.position.y, z: 0 },
-        rotation: media.mesh.rotation,
-        scale: media.mesh.scale
+        position: { x: 0, y: media?.mesh.position.y, z: 0 },
+        rotation: media?.mesh.rotation,
+        scale: media?.mesh.scale
       }, _ => {
-        media.opacity.multiplier = 1
+
+        if (media?.opacity.multiplier) {
+          media.opacity.multiplier = 1
+        }
 
         map(this.medias, item => {
           if (media !== item) {
@@ -136,10 +166,10 @@ export default class {
   /**
    * Changed.
    */
-  onChange (index) {
+  onChange (index: number) {
     this.index = index
 
-    const selectedCollection = parseInt(this.mediasElements[this.index].getAttribute('data-index'))
+    const selectedCollection = parseInt(this.mediasElements[this.index].getAttribute('data-index') || '')
 
     map(this.collectionsElements, (element, elementIndex) => {
       if (elementIndex === selectedCollection) {
@@ -172,7 +202,8 @@ export default class {
 
     const index = Math.floor(Math.abs((this.scroll.current - (this.medias[0].bounds.width / 2)) / this.scroll.limit) * (this.medias.length - 1))
 
-    if (this.index !== index) {
+    console.log({index})
+    if (this.index !== index && !Number.isNaN(index) && index !== Infinity) {
       this.onChange(index)
     }
 

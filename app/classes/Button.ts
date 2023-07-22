@@ -1,10 +1,16 @@
 import GSAP from 'gsap'
 
-import Component from 'classes/Component'
+import Component from './Component'
 
 export default class Button extends Component {
-  constructor ({ element }) {
-    super({ element })
+  timeline: gsap.core.Timeline
+  path: any
+  pathLength: any
+  pathValue: any
+  onMouseEnterEvent: any
+  onMouseLeaveEvent: any
+  constructor ({ element, elements }) {
+    super({ element, elements })
 
     this.timeline = GSAP.timeline({ paused: true })
     this.createPath()
@@ -38,7 +44,6 @@ export default class Button extends Component {
 
     GSAP.to(this.path, {
       duration: 1,
-      // ease,
       strokeDashoffset: this.pathValue
     })
 

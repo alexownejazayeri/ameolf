@@ -1,18 +1,41 @@
 const ampt = require('@ampt/sdk')
+const express = require('express')
+const prismic = import('@prismicio/client')
+import { Application } from 'express'
+import { ImageField, Slice } from '@prismicio/types'
+
 const { http, params } = ampt
 
 // the backend
 require('dotenv').config()
 
 const logger = require('morgan')
-const express = require('express')
 const errorHandler = require('errorhandler')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 
-const app = express()
+const app: Application = express()
 const path = require('path')
-// const port = process.env.EXPRESS_PORT || 8160
+const port = process.env.EXPRESS_PORT || 8160
+
+interface DocumentLink {
+  id: string;
+  type: 'about' | 'collections' | 'product';
+  tags: string[];
+  lang: string;
+  slug: string;
+  first_publication_date: string;
+  last_publication_date: string;
+  uid: string;
+  link_type: 'Document';
+  isBroken: boolean;
+}
+
+interface GalleryImage {image: ImageField}
+
+interface AboutPageSlice extends Omit<Slice, 'items'> {
+  items: GalleryImage[];
+}
 
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -22,7 +45,6 @@ app.use(errorHandler())
 app.use(express.static(path.join(__dirname, 'public')))
 
 const fetch = import('node-fetch')
-const prismic = require('@prismicio/client')
 const prismicH = require('@prismicio/helpers')
 const UAParser = require('ua-parser-js')
 
@@ -36,12 +58,9 @@ const accessToken = params('PRISMIC_TOKEN')
 // const repoName = 'amelof' // Fill in your repository name.
 // const accessToken = process.env.PRISMIC_ACCESS_TOKEN // If your repository is private, add an access token.
 
-const client = prismic.createClient(repoName, {
-  fetch,
-  accessToken
-})
 
-const handleLinkResolver = (doc) => {
+const handleLinkResolver = (doc: DocumentLink) => {
+
   if (doc.type === 'product') {
     return `/detail/${doc.slug}`
   }
@@ -57,9 +76,8 @@ const handleLinkResolver = (doc) => {
   return '/'
 }
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   const ua = UAParser(req.headers['user-agent'])
-
   res.locals.isDesktop = ua.device.type === undefined
   res.locals.isPhone = ua.device.type === 'mobile'
   res.locals.isTablet = ua.device.type === 'tablet'
@@ -69,7 +87,7 @@ app.use((req, res, next) => {
     prismicH
   }
 
-  res.locals.Numbers = (index) =>
+  res.locals.Numbers = (index: number) =>
     index === 0
       ? 'One'
       : index === 1
@@ -88,6 +106,11 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 const handleRequest = async () => {
+  const client = (await prismic).createClient(repoName, {
+    fetch,
+    accessToken
+  })
+
   const about = await client.getSingle('about')
   const home = await client.getSingle('home')
   const meta = await client.getSingle('meta')
@@ -100,27 +123,42 @@ const handleRequest = async () => {
 
   // Pre-fetching content and loading to GPU
   // to avoid "flash of content"
-  const assets = []
+  let assets: (string | null | undefined)[] = []
 
-  home.data.gallery.forEach((item) => {
-    assets.push(item.image.url)
+  home.data.gallery.forEach((homeGalleryImage: GalleryImage) => {
+    assets.push(homeGalleryImage.image.url)
   })
 
-  about.data.gallery.forEach((item) => {
-    assets.push(item.image.url)
+  about.data.gallery.forEach((aboutGalleryImage: GalleryImage) => {
+    assets.push(aboutGalleryImage.image.url)
   })
 
-  about.data.body.forEach((section) => {
-    if (section.slice_type === 'gallery') {
-      section.items.forEach((item) => {
-        assets.push(item.image.url)
+  about.data.body.forEach((aboutPageSection: AboutPageSlice) => {
+    if (aboutPageSection.slice_type === 'gallery') {
+      aboutPageSection.items.forEach((sectionGalleryImage: GalleryImage) => {
+          assets.push(sectionGalleryImage.image.url)
       })
     }
   })
 
   collections.forEach((collection) => {
-    collection.data.products.forEach((item) => {
-      assets.push(item.products_product.data.image.url)
+    collection.data.products.forEach((collectionItem: {
+      products_product: {
+        id: string;
+        type: string;
+        tags: string[];
+        lang: string;
+        slug: string;
+        first_publication_date: string;
+        last_publication_date: string;
+        uid: string;
+        data: GalleryImage,
+        link_type: string;
+        isBroken: boolean;
+      }
+    }) => {
+
+      assets.push(collectionItem.products_product.data.image.url)
     })
   })
 
@@ -154,6 +192,11 @@ app.get('/collections', async (req, res) => {
 })
 
 app.get('/detail/:uid', async (req, res) => {
+  const client = (await prismic).createClient(repoName, {
+    fetch,
+    accessToken
+  })
+
   const defaults = await handleRequest()
   const product = await client.getByUID('product', req.params.uid, {
     fetchLinks: 'collection.title'
@@ -164,6 +207,11 @@ app.get('/detail/:uid', async (req, res) => {
     product
   })
 })
+
+// Note:
+// Since this project uses a private beta of ampt,
+// you'll need to remove or comment line 176
+// and use app.listen() instead.
 
 // app.listen(port, () => {
 //   console.log(`Floema listening at http://localhost:${port}`)

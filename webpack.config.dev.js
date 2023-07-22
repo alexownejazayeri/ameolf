@@ -6,7 +6,7 @@ const config = require('./webpack.config')
 module.exports = merge(config, {
   mode: 'development',
 
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
 
   devServer: {
     devMiddleware: {
@@ -15,6 +15,6 @@ module.exports = merge(config, {
   },
 
   output: {
-    path: path.resolve(__dirname, 'static')
+    path: path.resolve(__dirname, 'public')
   }
 })
