@@ -19,10 +19,9 @@ export default class Detail extends Page {
   create () {
     super.create()
 
-    const elements = this.elements
+    // @ts-ignore
     this.link = new Button({
       element: this.elements.button,
-      elements
     })
   }
 

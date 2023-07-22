@@ -1,224 +1,220 @@
-import NormalizeWheel from 'normalize-wheel'
-import each from 'lodash/each'
+import NormalizeWheel from "normalize-wheel";
+import each from "lodash/each";
 
-import Canvas from './components/Canvas'
-import Navigation from './components/Navigation'
-import Preloader from './components/Preloader'
+import Canvas from "./components/Canvas";
+import Navigation from "./components/Navigation";
+import Preloader from "./components/Preloader";
 
-import About from './pages/About'
-import Collections from './pages/Collections'
-import Detail from './pages/Detail'
-import Home from './pages/Home'
+import About from "./pages/About";
+import Collections from "./pages/Collections";
+import Detail from "./pages/Detail";
+import Home from "./pages/Home";
 
 class App {
-  canvas: Canvas
-  template: string | null | undefined
-  content: Element | null
-  navigation: Navigation
-  preloader: Preloader
-  pages: { about: About; collections: Collections; detail: Detail; home: Home }
-  page: About | Collections | Detail | Home
-  constructor () {
-    this.createContent()
+  canvas: Canvas;
+  template: string | null | undefined;
+  content: Element | null;
+  navigation: Navigation;
+  preloader: Preloader;
+  pages: { about: About; collections: Collections; detail: Detail; home: Home };
+  page: About | Collections | Detail | Home;
+  constructor() {
+    this.content = document.querySelector(".content");
+    this.template = this.content?.getAttribute("data-template");
 
-    this.createCanvas()
-    this.createPreloader()
-    this.createNavigation()
-    this.createPages()
+    this.createCanvas();
+    this.createPreloader();
+    this.createNavigation();
+    this.createPages();
 
-    this.addEventListeners()
-    this.addLinkListeners()
+    this.addEventListeners();
+    this.addLinkListeners();
 
-    this.onResize()
+    this.onResize();
 
-    this.update()
+    this.update();
   }
 
-  createCanvas () {
+  createCanvas() {
     this.canvas = new Canvas({
-      template: this.template
-    })
+      template: this.template,
+    });
   }
 
-  createContent () {
-    this.content = document.querySelector('.content')
-    this.template = this.content?.getAttribute('data-template')
-  }
-
-  createNavigation () {
+  createNavigation() {
     this.navigation = new Navigation({
-      template: this.template
-    })
+      template: this.template,
+    });
   }
 
-  createPreloader () {
+  createPreloader() {
     this.preloader = new Preloader({
-      canvas: this.canvas
-    })
-    this.preloader.once('completed', this.onPreloaded.bind(this))
+      canvas: this.canvas,
+    });
+    this.preloader.once("completed", this.onPreloaded.bind(this));
   }
 
-  createPages () {
+  createPages() {
     this.pages = {
       about: new About(),
       collections: new Collections(),
       detail: new Detail(),
-      home: new Home()
-    }
+      home: new Home(),
+    };
 
-    this.page = this.pages[this.template || 'home']
-    this.page.create()
+    this.page = this.pages[this.template || "home"];
+    this.page.create();
   }
 
   /**
    * Events.
-  */
-  onPreloaded () {
-    this.onResize()
+   */
+  onPreloaded() {
+    this.onResize();
 
-    this.canvas.onPreloaded()
+    this.canvas.onPreloaded();
 
-    this.page.show()
+    this.page.show();
   }
 
-  onPopState () {
+  onPopState() {
     this.onChange({
-      url: window.location.pathname
-    })
+      url: window.location.pathname,
+    });
   }
 
-  async onChange ({ url }) {
-    this.canvas.onChangeStart(this.template, url)
+  async onChange({ url }) {
+    this.canvas.onChangeStart(this.template, url);
 
-    await this.page.hide()
+    await this.page.hide();
 
-    const request = await window.fetch(url)
+    const request = await window.fetch(url);
 
     if (request.status === 200) {
-      const html = await request.text()
-      const div = document.createElement('div')
+      const html = await request.text();
+      const div = document.createElement("div");
 
-      window.history.pushState({}, '', url)
+      window.history.pushState({}, "", url);
 
-      div.innerHTML = html
+      div.innerHTML = html;
 
-      const divContent = div.querySelector('.content')
+      const divContent = div.querySelector(".content");
 
-      this.template = divContent?.getAttribute('data-template')
+      this.template = divContent?.getAttribute("data-template") || "home";
 
-      this.navigation.onChange(this.template)
+      this.navigation.onChange(this.template);
 
-      this.content?.setAttribute('data-template', this.template || 'no template found')
+      this.content?.setAttribute("data-template", this.template || "home");
 
       if (this.content) {
-        this.content.innerHTML = divContent?.innerHTML || ''
+        this.content.innerHTML = divContent?.innerHTML || "";
       }
 
-      this.canvas.onChangeEnd(this.template)
+      this.canvas.onChangeEnd(this.template);
 
-      this.page = this.pages[this.template || 'home']
-      this.page.create()
+      this.page = this.pages[this.template || "home"];
+      this.page.create();
 
-      this.onResize()
+      this.onResize();
 
-      this.page.show()
+      this.page.show();
 
-      this.addLinkListeners()
+      this.addLinkListeners();
     } else {
-      console.error('Error')
+      console.error("Error");
     }
   }
 
-  onResize () {
+  onResize() {
     if (this.page && this.page.onResize) {
-      this.page.onResize()
+      this.page.onResize();
     }
 
-    window.requestAnimationFrame(_ => {
+    window.requestAnimationFrame((_) => {
       if (this.canvas && this.canvas.onResize) {
-        this.canvas.onResize()
+        this.canvas.onResize();
       }
-    })
+    });
   }
 
-  onTouchDown (event) {
+  onTouchDown(event) {
     if (this.canvas && this.canvas.onTouchDown) {
-      this.canvas.onTouchDown(event)
+      this.canvas.onTouchDown(event);
     }
   }
 
-  onTouchMove (event) {
+  onTouchMove(event) {
     if (this.canvas && this.canvas.onTouchMove) {
-      this.canvas.onTouchMove(event)
+      this.canvas.onTouchMove(event);
     }
   }
 
-  onTouchUp (event) {
+  onTouchUp(event) {
     if (this.canvas && this.canvas.onTouchUp) {
-      this.canvas.onTouchUp(event)
+      this.canvas.onTouchUp(event);
     }
   }
 
-  onWheel (event) {
-    const normalizedWheel = NormalizeWheel(event)
+  onWheel(event) {
+    const normalizedWheel = NormalizeWheel(event);
 
     if (this.canvas && this.canvas.onWheel) {
-      this.canvas.onWheel(normalizedWheel)
+      this.canvas.onWheel(normalizedWheel);
     }
 
     if (this.page && this.page.onWheel) {
-      this.page.onWheel(normalizedWheel)
+      this.page.onWheel(normalizedWheel);
     }
   }
 
   /**
    * Loop.
    */
-  update () {
+  update() {
     // Create animation frames, calling everything in the entry point
     if (this.page && this.page.update) {
-      this.page.update()
+      this.page.update();
     }
 
     if (this.canvas && this.canvas.update) {
-      this.canvas.update(this.page.scroll)
+      this.canvas.update(this.page.scroll);
     }
 
-    window.requestAnimationFrame(this.update.bind(this))
+    window.requestAnimationFrame(this.update.bind(this));
   }
 
   /**
    * Listeners.
    */
-  addEventListeners () {
-    window.addEventListener('mousewheel', this.onWheel.bind(this))
+  addEventListeners() {
+    window.addEventListener("mousewheel", this.onWheel.bind(this));
 
-    window.addEventListener('mousedown', this.onTouchDown.bind(this))
-    window.addEventListener('mousemove', this.onTouchMove.bind(this))
-    window.addEventListener('mouseup', this.onTouchUp.bind(this))
+    window.addEventListener("mousedown", this.onTouchDown.bind(this));
+    window.addEventListener("mousemove", this.onTouchMove.bind(this));
+    window.addEventListener("mouseup", this.onTouchUp.bind(this));
 
-    window.addEventListener('touchstart', this.onTouchDown.bind(this))
-    window.addEventListener('touchmove', this.onTouchMove.bind(this))
-    window.addEventListener('touchend', this.onTouchUp.bind(this))
+    window.addEventListener("touchstart", this.onTouchDown.bind(this));
+    window.addEventListener("touchmove", this.onTouchMove.bind(this));
+    window.addEventListener("touchend", this.onTouchUp.bind(this));
 
-    window.addEventListener('popstate', this.onPopState.bind(this))
-    window.addEventListener('resize', this.onResize.bind(this))
+    window.addEventListener("popstate", this.onPopState.bind(this));
+    window.addEventListener("resize", this.onResize.bind(this));
   }
 
-  addLinkListeners () {
-    const links = document.querySelectorAll('a')
+  addLinkListeners() {
+    const links = document.querySelectorAll("a");
 
-    each(links, link => {
-      link.onclick = event => {
-        event.preventDefault()
+    each(links, (link) => {
+      link.onclick = (event) => {
+        event.preventDefault();
 
-        const { href } = link
+        const { href } = link;
 
-        this.onChange({ url: href })
-      }
-    })
+        this.onChange({ url: href });
+      };
+    });
   }
 }
 
 // eslint-disable-next-line no-new
-new App()
+new App();

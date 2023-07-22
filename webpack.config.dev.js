@@ -6,7 +6,7 @@ const config = require('./webpack.config')
 module.exports = merge(config, {
   mode: 'development',
 
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
 
   devServer: {
     devMiddleware: {

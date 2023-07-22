@@ -18,15 +18,11 @@ export default class Home extends Page {
   create () {
     super.create()
 
-    const elements = this.elements
-
-    if (elements) {
-
+    //@ts-ignore
       this.link = new Button({
-        element: this.elements.link,
-        elements
+        element: this.elements.link
       })
-    }
+
   }
 
   destroy () {

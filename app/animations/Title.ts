@@ -3,7 +3,7 @@ import GSAP from 'gsap'
 import Animation from '../classes/Animation'
 
 export default class Title extends Animation {
-  constructor ({ element, elements }: {element: any; elements: any}) {
+  constructor ({ element, elements }) {
     super({
       element,
       elements

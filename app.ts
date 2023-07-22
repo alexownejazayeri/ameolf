@@ -45,7 +45,7 @@ app.use(errorHandler())
 app.use(express.static(path.join(__dirname, 'public')))
 
 const fetch = import('node-fetch')
-const prismicHelpers = import('@prismicio/helpers')
+const prismicH = require('@prismicio/helpers')
 const UAParser = require('ua-parser-js')
 
 // const repoName = params('PRISMIC_REPO')
@@ -84,7 +84,7 @@ app.use(async (req, res, next) => {
 
   res.locals.ctx = {
     prismic,
-    asHTML: async (description: any) => {(await prismicHelpers).asHTML(description)}
+    prismicH
   }
 
   res.locals.Numbers = (index: number) =>
@@ -107,7 +107,6 @@ app.set('view engine', 'pug')
 
 const handleRequest = async () => {
   const client = (await prismic).createClient(repoName, {
-    //@ts-ignore
     fetch,
     accessToken
   })
@@ -194,7 +193,6 @@ app.get('/collections', async (req, res) => {
 
 app.get('/detail/:uid', async (req, res) => {
   const client = (await prismic).createClient(repoName, {
-    // @ts-ignore
     fetch,
     accessToken
   })

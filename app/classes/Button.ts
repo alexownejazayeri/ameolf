@@ -9,7 +9,7 @@ export default class Button extends Component {
   pathValue: any
   onMouseEnterEvent: any
   onMouseLeaveEvent: any
-  constructor ({ element, elements }: {element: any; elements: any}) {
+  constructor ({ element, elements }) {
     super({ element, elements })
 
     this.timeline = GSAP.timeline({ paused: true })

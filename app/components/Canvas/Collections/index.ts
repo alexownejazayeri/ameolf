@@ -1,10 +1,17 @@
-import { Plane, Transform } from 'ogl-typescript'
+import { Plane, Texture, Transform } from 'ogl-typescript'
 import GSAP from 'gsap'
 import Prefix from 'prefix'
 
 import map from 'lodash/map'
 
 import Media from './Media'
+
+declare global {
+  interface Window {
+      ASSETS: string[];
+      TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
+  }
+}
 
 export default class {
   id: string
@@ -105,7 +112,7 @@ export default class {
         scale: media?.mesh.scale
       }, _ => {
 
-        if (media?.opacity?.multiplier) {
+        if (media?.opacity.multiplier) {
           media.opacity.multiplier = 1
         }
 
@@ -159,7 +166,7 @@ export default class {
   /**
    * Changed.
    */
-  onChange (index) {
+  onChange (index: number) {
     this.index = index
 
     const selectedCollection = parseInt(this.mediasElements[this.index].getAttribute('data-index') || '')
@@ -195,7 +202,8 @@ export default class {
 
     const index = Math.floor(Math.abs((this.scroll.current - (this.medias[0].bounds.width / 2)) / this.scroll.limit) * (this.medias.length - 1))
 
-    if (this.index !== index) {
+    console.log({index})
+    if (this.index !== index && !Number.isNaN(index) && index !== Infinity) {
       this.onChange(index)
     }
 

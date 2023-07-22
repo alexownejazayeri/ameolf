@@ -2,7 +2,7 @@ import Component from '../classes/Component'
 
 export default class AsyncLoad extends Component {
   observer: IntersectionObserver
-  constructor ({ element, elements }: {element: any; elements: any}) {
+  constructor ({ element, elements }) {
     super({ element, elements })
 
     this.createObserver()

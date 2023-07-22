@@ -30,18 +30,16 @@ export default class Preloader extends Component {
     window.TEXTURES = {}
 
     split({
-      element: this.elements?.title,
+      element: this.elements.title,
       expression: '<br>'
     })
 
     split({
-      element: this.elements?.title,
+      element: this.elements.title,
       expression: '<br>'
     })
 
-    if (this.elements?.title.querySelectorAll('span span')) {
-      this.elements.titleSpans = this.elements.title.querySelectorAll('span span')
-    }
+    this.elements.titleSpans = this.elements.title.querySelectorAll('span span')
 
     this.length = 0
 
@@ -73,9 +71,8 @@ export default class Preloader extends Component {
 
     const percent = this.length / window.ASSETS.length
 
-    if (this.elements?.numberText) {
-      this.elements.numberText.innerHTML = `${Math.round(percent * 100)}%`
-    }
+    this.elements.numberText.innerHTML = `${Math.round(percent * 100)}%`
+
 
     if (percent === 1) {
       this.onLoaded()
@@ -90,14 +87,14 @@ export default class Preloader extends Component {
         delay: 1
       })
 
-      this.animateOut.to(this.elements?.titleSpans, {
+      this.animateOut.to(this.elements.titleSpans, {
         duration: 1.5,
         ease: 'expo.out',
         stagger: 0.1,
         y: '100%'
       })
 
-      this.animateOut.to(this.elements?.numberText, {
+      this.animateOut.to(this.elements.numberText, {
         duration: 1.5,
         ease: 'expo.out',
         stagger: 0.1,

@@ -1,368 +1,374 @@
-import { Camera, Renderer, Transform } from 'ogl-typescript'
+import { Camera, Renderer, Transform } from "ogl-typescript";
 
-import About from './About'
-import Collections from './Collections'
-import Detail from './Detail'
-import Home from './Home'
+import About from "./About";
+import Collections from "./Collections";
+import Detail from "./Detail";
+import Home from "./Home";
 
-import Transition from './Transition'
+import Transition from "./Transition";
 
 export default class Canvas {
-  template: any
-  x: { start: number; distance: number; end: number }
-  y: { start: number; distance: number; end: number }
-  renderer: any
-  gl: any
-  camera: any
-  scene: any
-  home: Home
-  sizes: any
-  about: About
-  collections: Collections
-  transition: any
-  detail: Detail
-  isFromCollectionsToDetail: boolean
-  isFromDetailToCollections: boolean
-  isDown: boolean
-  constructor ({ template }) {
-    this.template = template
+  template: string;
+  x: { start: number; distance: number; end: number };
+  y: { start: number; distance: number; end: number };
+  renderer: any;
+  gl: any;
+  camera: any;
+  scene: any;
+  home: Home;
+  sizes: any;
+  about: About;
+  collections: Collections;
+  transition: any;
+  detail: Detail;
+  isFromCollectionsToDetail: boolean;
+  isFromDetailToCollections: boolean;
+  isDown: boolean;
+  constructor({ template }) {
+    this.template = template;
 
     this.x = {
       start: 0,
       distance: 0,
-      end: 0
-    }
+      end: 0,
+    };
 
     this.y = {
       start: 0,
       distance: 0,
-      end: 0
-    }
+      end: 0,
+    };
 
-    this.createRenderer()
-    this.createCamera()
-    this.createScene()
+    this.createRenderer();
+    this.createCamera();
+    this.createScene();
 
-    this.onResize()
+    this.onResize();
   }
 
-  createRenderer () {
+  createRenderer() {
     this.renderer = new Renderer({
       alpha: true,
-      antialias: true
-    })
+      antialias: true,
+    });
 
-    this.gl = this.renderer.gl
+    this.gl = this.renderer.gl;
 
-    document.body.appendChild(this.gl.canvas)
+    document.body.appendChild(this.gl.canvas);
   }
 
-  createCamera () {
-    this.camera = new Camera(this.gl)
-    this.camera.position.z = 5
+  createCamera() {
+    this.camera = new Camera(this.gl);
+    this.camera.position.z = 5;
   }
 
-  createScene () {
-    this.scene = new Transform()
+  createScene() {
+    this.scene = new Transform();
   }
 
   /**
    * Home.
    */
-  createHome () {
+  createHome() {
     this.home = new Home({
       gl: this.gl,
       scene: this.scene,
-      sizes: this.sizes
-    })
+      sizes: this.sizes,
+    });
   }
 
-  destroyHome () {
-    if (!this.home) return
+  destroyHome() {
+    if (!this.home) return;
 
-    this.home.destroy()
-    // this.home = null TODO(alex): come back to this
+    this.home.destroy();
+    // this.home = null // TODO(alex): come back to this
   }
 
   /**
    * About.
    */
-  createAbout () {
+  createAbout() {
     this.about = new About({
       gl: this.gl,
       scene: this.scene,
-      sizes: this.sizes
-    })
+      sizes: this.sizes,
+    });
   }
 
-  destroyAbout () {
-    if (!this.about) return
+  destroyAbout() {
+    if (!this.about) return;
 
-    this.about.destroy()
+    this.about.destroy();
     // this.about = null TODO(alex): come back to this
   }
 
   /**
    * Collections.
    */
-  createCollections () {
+  createCollections() {
     this.collections = new Collections({
       gl: this.gl,
       scene: this.scene,
       sizes: this.sizes,
-      transition: this.transition
-    })
+      transition: this.transition,
+    });
   }
 
-  destroyCollections () {
-    if (!this.collections) return
+  destroyCollections() {
+    if (!this.collections) return;
 
-    this.collections.destroy()
+    this.collections.destroy();
     // this.collections = null TODO(alex): come back to this
   }
 
   /**
    * Detail.
    */
-  createDetail () {
+  createDetail() {
     this.detail = new Detail({
       gl: this.gl,
       scene: this.scene,
       sizes: this.sizes,
-      transition: this.transition
-    })
+      transition: this.transition,
+    });
   }
 
-  destroyDetail () {
-    if (!this.detail) return
+  destroyDetail() {
+    if (!this.detail) return;
 
-    this.detail.destroy()
+    this.detail.destroy();
     // this.detail = null TODO(alex): come back to this
   }
 
   /**
    * Events.
    */
-  onPreloaded () {
-    this.onChangeEnd(this.template)
+  onPreloaded() {
+    this.onChangeEnd(this.template);
   }
 
-  onChangeStart (template, url) {
+  onChangeStart(template, url) {
     if (this.about) {
-      this.about.hide()
+      this.about.hide();
     }
 
     if (this.collections) {
-      this.collections.hide()
+      this.collections.hide();
     }
 
     if (this.detail) {
-      this.detail.hide()
+      this.detail.hide();
     }
 
     if (this.home) {
-      this.home.hide()
+      this.home.hide();
     }
 
-    this.isFromCollectionsToDetail = this.template === 'collections' && url.indexOf('detail') > -1
-    this.isFromDetailToCollections = this.template === 'detail' && url.indexOf('collections') > -1
+    this.isFromCollectionsToDetail =
+      this.template === "collections" && url.indexOf("detail") > -1;
+    this.isFromDetailToCollections =
+      this.template === "detail" && url.indexOf("collections") > -1;
 
     if (this.isFromCollectionsToDetail || this.isFromDetailToCollections) {
       this.transition = new Transition({
         gl: this.gl,
         scene: this.scene,
         sizes: this.sizes,
-        url
-      })
-      this.transition.setElement(this.collections || this.detail)
+        url,
+      });
+      this.transition.setElement(this.collections || this.detail);
     }
   }
 
-  onChangeEnd (template) {
-    if (template === 'about') {
-      this.createAbout()
+  onChangeEnd(template) {
+    if (template === "about") {
+      this.createAbout();
     } else if (this.about) {
-      this.destroyAbout()
+      this.destroyAbout();
     }
 
-    if (template === 'collections') {
-      this.createCollections()
+    if (template === "collections") {
+      this.createCollections();
     } else if (this.collections) {
-      this.destroyCollections()
+      this.destroyCollections();
     }
 
-    if (template === 'detail') {
-      this.createDetail()
+    if (template === "detail") {
+      this.createDetail();
     } else if (this.detail) {
-      this.destroyDetail()
+      this.destroyDetail();
     }
 
-    if (template === 'home') {
-      this.destroyHome()
-      this.createHome()
+    if (template === "home") {
+      this.destroyHome();
+      this.createHome();
     } else {
-      this.destroyHome()
+      this.destroyHome();
     }
 
-    this.template = template
+    this.template = template;
   }
 
-  onResize () {
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
+  onResize() {
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
 
     this.camera.perspective({
-      aspect: window.innerWidth / window.innerHeight
-    })
+      aspect: window.innerWidth / window.innerHeight,
+    });
 
-    const fov = this.camera.fov * (Math.PI / 180)
-    const height = 2 * Math.tan(fov / 2) * this.camera.position.z
-    const width = height * this.camera.aspect
+    const fov = this.camera.fov * (Math.PI / 180);
+    const height = 2 * Math.tan(fov / 2) * this.camera.position.z;
+    const width = height * this.camera.aspect;
 
     this.sizes = {
       height,
-      width
-    }
+      width,
+    };
 
     const values = {
-      sizes: this.sizes
-    }
+      sizes: this.sizes,
+    };
 
     if (this.about) {
-      this.about.onResize(values)
+      this.about.onResize(values);
     }
 
     if (this.collections) {
-      this.collections.onResize(values)
+      this.collections.onResize(values);
     }
 
     if (this.detail) {
-      this.detail.onResize(values)
+      this.detail.onResize(values);
     }
 
     if (this.home) {
-      this.home.onResize(values)
+      this.home.onResize(values);
     }
   }
 
-  onTouchDown (event: any) {
-    this.isDown = true
+  onTouchDown(event: any) {
+    this.isDown = true;
 
-    this.x.start = event.touches ? event.touches[0].clientX : event.clientX
-    this.y.start = event.touches ? event.touches[0].clientY : event.clientY
+    this.x.start = event.touches ? event.touches[0].clientX : event.clientX;
+    this.y.start = event.touches ? event.touches[0].clientY : event.clientY;
 
     const values = {
       x: this.x,
-      y: this.y
-    }
+      y: this.y,
+    };
 
     if (this.about) {
-      this.about.onTouchDown(values)
+      this.about.onTouchDown(values);
     }
 
     if (this.collections) {
-      this.collections.onTouchDown(values)
+      this.collections.onTouchDown(values);
     }
 
     if (this.home) {
-      this.home.onTouchDown(values)
+      this.home.onTouchDown(values);
     }
   }
 
-  onTouchMove (event: any) {
-    if (!this.isDown) return
+  onTouchMove(event: any) {
+    if (!this.isDown) return;
 
-    const x = event.touches ? event.touches[0].clientX : event.clientX
-    const y = event.touches ? event.touches[0].clientY : event.clientY
+    const x = event.touches ? event.touches[0].clientX : event.clientX;
+    const y = event.touches ? event.touches[0].clientY : event.clientY;
 
-    this.x.end = x
-    this.y.end = y
+    this.x.end = x;
+    this.y.end = y;
 
     const values = {
       x: this.x,
-      y: this.y
-    }
+      y: this.y,
+    };
 
     if (this.about) {
-      this.about.onTouchMove(values)
+      this.about.onTouchMove(values);
     }
 
     if (this.collections) {
-      this.collections.onTouchMove(values)
+      this.collections.onTouchMove(values);
     }
 
     if (this.detail) {
-      this.detail.onTouchMove(values)
+      this.detail.onTouchMove(values);
     }
 
     if (this.home) {
-      this.home.onTouchMove(values)
+      this.home.onTouchMove(values);
     }
   }
 
-  onTouchUp (event: any) {
-    this.isDown = false
+  onTouchUp(event: any) {
+    this.isDown = false;
 
-    const x = event.changedTouches ? event.changedTouches[0].clientX : event.clientX
-    const y = event.changedTouches ? event.changedTouches[0].clientY : event.clientY
+    const x = event.changedTouches
+      ? event.changedTouches[0].clientX
+      : event.clientX;
+    const y = event.changedTouches
+      ? event.changedTouches[0].clientY
+      : event.clientY;
 
-    this.x.end = x
-    this.y.end = y
+    this.x.end = x;
+    this.y.end = y;
 
     const values = {
       x: this.x,
-      y: this.y
-    }
+      y: this.y,
+    };
 
     if (this.about) {
-      this.about.onTouchUp(values)
+      this.about.onTouchUp(values);
     }
 
     if (this.collections) {
-      this.collections.onTouchUp(values)
+      this.collections.onTouchUp(values);
     }
 
     if (this.detail) {
-      this.detail.onTouchUp(values)
+      this.detail.onTouchUp(values);
     }
 
     if (this.home) {
-      this.home.onTouchUp(values)
+      this.home.onTouchUp(values);
     }
   }
 
-  onWheel (event: any) {
+  onWheel(event: any) {
     if (this.home) {
-      this.home.onWheel(event)
+      this.home.onWheel(event);
     }
 
     if (this.collections) {
-      this.collections.onWheel(event)
+      this.collections.onWheel(event);
     }
   }
 
   /**
    * Loop.
    */
-  update (scroll) {
+  update(scroll) {
     if (this.about) {
-      this.about.update(scroll)
+      this.about.update(scroll);
     }
 
     if (this.collections) {
-      this.collections.update()
+      this.collections.update();
     }
 
     if (this.detail) {
-      this.detail.update()
+      this.detail.update();
     }
 
     if (this.home) {
-      this.home.update()
+      this.home.update();
     }
 
     this.renderer.render({
       camera: this.camera,
-      scene: this.scene
-    })
+      scene: this.scene,
+    });
   }
 }
