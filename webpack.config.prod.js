@@ -1,5 +1,5 @@
-import { merge } from 'webpack-merge'
-import config from './webpack.config'
+const config = require('./webpack.config')
+const merge = require('webpack-merge')
 
 const join = require('path')
 
