@@ -1,10 +1,10 @@
-// const ampt = require('@ampt/sdk')
+const ampt = require('@ampt/sdk')
 const express = require('express')
 const prismic = import('@prismicio/client')
 import { Application } from 'express'
 import { ImageField, Slice } from '@prismicio/types'
 
-// const { http, params } = ampt
+const { http, params } = ampt
 
 // the backend
 require('dotenv').config()
@@ -48,15 +48,15 @@ const fetch = import('node-fetch')
 const prismicH = require('@prismicio/helpers')
 const UAParser = require('ua-parser-js')
 
-// const repoName = params('PRISMIC_REPO')
-// const accessToken = params('PRISMIC_TOKEN')
+const repoName = params('PRISMIC_REPO')
+const accessToken = params('PRISMIC_TOKEN')
 
 // Note:
 // If you're pulling this down, comment out the two lines above
 // and use the two lines below, but with your own .env or token
 
-const repoName = 'amelof' // Fill in your repository name.
-const accessToken = process.env.PRISMIC_ACCESS_TOKEN // If your repository is private, add an access token.
+// const repoName = 'amelof' // Fill in your repository name.
+// const accessToken = process.env.PRISMIC_ACCESS_TOKEN // If your repository is private, add an access token.
 
 
 const handleLinkResolver = (doc: DocumentLink) => {
@@ -213,8 +213,8 @@ app.get('/detail/:uid', async (req, res) => {
 // you'll need to remove or comment line 176
 // and use app.listen() instead.
 
-app.listen(port, () => {
-  console.log(`Floema listening at http://localhost:${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Floema listening at http://localhost:${port}`)
+// })
 
-// http.node.use(app)
+http.node.use(app)
