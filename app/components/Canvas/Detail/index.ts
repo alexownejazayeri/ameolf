@@ -1,10 +1,27 @@
 import GSAP from 'gsap'
-import { Mesh, Plane, Program } from 'ogl'
+import { Mesh, Plane, Program } from 'ogl-typescript'
 
-import fragment from 'shaders/plane-fragment.glsl'
-import vertex from 'shaders/plane-vertex.glsl'
+// @ts-ignore
+import fragment from '../../../shaders/plane-fragment.glsl'
+// @ts-ignore
+import vertex from '../../../shaders/plane-vertex.glsl'
 
 export default class {
+  id: string
+  element: any
+  gl: any
+  scene: any
+  sizes: any
+  transition: any
+  geometry: Plane
+  texture: any
+  program: Program
+  mesh: Mesh
+  bounds: any
+  height: number
+  width: number
+  x: number
+  y: number
   constructor ({ gl, scene, sizes, transition }) {
     this.id = 'detail'
     this.element = document.querySelector('.detail__media__image')
@@ -92,15 +109,15 @@ export default class {
     this.updateY()
   }
 
-  onTouchDown () {
+  onTouchDown (values: any) {
 
   }
 
-  onTouchMove () {
+  onTouchMove (values: any) {
 
   }
 
-  onTouchUp () {
+  onTouchUp (values: any) {
 
   }
 

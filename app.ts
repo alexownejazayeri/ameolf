@@ -1,7 +1,8 @@
 const ampt = require('@ampt/sdk')
 const express = require('express')
-import prismic, { ImageField, Slice } from '@prismicio/client'
+const prismic = import('@prismicio/client')
 import { Application } from 'express'
+import { ImageField, Slice } from '@prismicio/types'
 
 const { http, params } = ampt
 
@@ -15,7 +16,7 @@ const methodOverride = require('method-override')
 
 const app: Application = express()
 const path = require('path')
-// const port = process.env.EXPRESS_PORT || 8160
+const port = process.env.EXPRESS_PORT || 8160
 
 interface DocumentLink {
   id: string;
@@ -57,11 +58,6 @@ const accessToken = params('PRISMIC_TOKEN')
 // const repoName = 'amelof' // Fill in your repository name.
 // const accessToken = process.env.PRISMIC_ACCESS_TOKEN // If your repository is private, add an access token.
 
-const client = prismic.createClient(repoName, {
-  // @ts-ignore
-  fetch,
-  accessToken
-})
 
 const handleLinkResolver = (doc: DocumentLink) => {
 
@@ -80,9 +76,8 @@ const handleLinkResolver = (doc: DocumentLink) => {
   return '/'
 }
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   const ua = UAParser(req.headers['user-agent'])
-
   res.locals.isDesktop = ua.device.type === undefined
   res.locals.isPhone = ua.device.type === 'mobile'
   res.locals.isTablet = ua.device.type === 'tablet'
@@ -111,6 +106,11 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 const handleRequest = async () => {
+  const client = (await prismic).createClient(repoName, {
+    fetch,
+    accessToken
+  })
+
   const about = await client.getSingle('about')
   const home = await client.getSingle('home')
   const meta = await client.getSingle('meta')
@@ -136,7 +136,6 @@ const handleRequest = async () => {
   about.data.body.forEach((aboutPageSection: AboutPageSlice) => {
     if (aboutPageSection.slice_type === 'gallery') {
       aboutPageSection.items.forEach((sectionGalleryImage: GalleryImage) => {
-        console.log({sectionGalleryImage, items: aboutPageSection.items})
           assets.push(sectionGalleryImage.image.url)
       })
     }
@@ -193,6 +192,11 @@ app.get('/collections', async (req, res) => {
 })
 
 app.get('/detail/:uid', async (req, res) => {
+  const client = (await prismic).createClient(repoName, {
+    fetch,
+    accessToken
+  })
+
   const defaults = await handleRequest()
   const product = await client.getByUID('product', req.params.uid, {
     fetchLinks: 'collection.title'

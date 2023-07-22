@@ -1,11 +1,20 @@
-import { Texture } from 'ogl'
+import { Texture } from 'ogl-typescript'
 import GSAP from 'gsap'
 
-import Component from 'classes/Component'
+import Component from '../classes/Component'
 
-import { split } from 'utils/text'
+import { split } from '../utils/text'
 
+declare global {
+  interface Window {
+      ASSETS: string[];
+      TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
+  }
+}
 export default class Preloader extends Component {
+  canvas: any
+  length: number
+  animateOut: gsap.core.Timeline;
   constructor ({ canvas }) {
     super({
       element: '.preloader',
@@ -63,6 +72,7 @@ export default class Preloader extends Component {
     const percent = this.length / window.ASSETS.length
 
     this.elements.numberText.innerHTML = `${Math.round(percent * 100)}%`
+
 
     if (percent === 1) {
       this.onLoaded()

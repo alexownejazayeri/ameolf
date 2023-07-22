@@ -1,11 +1,23 @@
-import { Mesh, Plane, Program } from 'ogl'
+import { Mesh, Plane, Program } from 'ogl-typescript'
 import GSAP from 'gsap'
 
-import fragment from 'shaders/plane-fragment.glsl'
-import vertex from 'shaders/plane-vertex.glsl'
+// @ts-ignore
+import fragment from '../../shaders/plane-fragment.glsl'
+// @ts-ignore
+import vertex from '../../shaders/plane-vertex.glsl'
+
 
 export default class {
-  constructor ({ collections, gl, scene, sizes, url }) {
+  collections?: any
+  gl: any
+  scene: any
+  sizes: any
+  url: any
+  geometry?: any
+  program?: any
+  mesh?: any
+  transition?: string
+  constructor ({ collections, gl, scene, sizes, url }: {collections?: any; gl: any; scene: any; sizes: any; url: any}) {
     this.collections = collections
     this.gl = gl
     this.scene = scene
@@ -103,6 +115,6 @@ export default class {
 
     timeline.call(_ => {
       this.scene.removeChild(this.mesh)
-    }, null, '+=0.1')
+    }, [null], '+=0.1')
   }
 }

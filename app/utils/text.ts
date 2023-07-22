@@ -1,7 +1,7 @@
 import each from 'lodash/each'
 
 export function split ({ element, expression = ' ', append = true }) {
-  const words = splitText(element.innerHTML.toString().trim(), expression)
+  const words: any = splitText(element.innerHTML.toString().trim(), expression)
 
   let innerHTML = ''
 
@@ -9,7 +9,7 @@ export function split ({ element, expression = ' ', append = true }) {
     if (line.indexOf('<br>') > -1) {
       const lines = line.split('<br>')
 
-      each(lines, (line, index) => {
+      each(lines, (line, index: number) => {
         innerHTML += index > 0 ? '<br>' + parseLine(line) : parseLine(line)
       })
     } else {
@@ -43,8 +43,8 @@ export function split ({ element, expression = ' ', append = true }) {
 }
 
 export function calculate (spans) {
-  const lines = []
-  let words = []
+  const lines: any[] = []
+  let words: HTMLSpanElement[] = []
 
   let position = spans[0].offsetTop
 
@@ -73,9 +73,9 @@ export function calculate (spans) {
 function splitText (text, expression) {
   const splits = text.split('<br>')
 
-  let words = []
+  let words: any[] = []
 
-  each(splits, (item, index) => {
+  each(splits, (item, index: number) => {
     if (index > 0) {
       words.push('<br>')
     }
@@ -85,7 +85,7 @@ function splitText (text, expression) {
     let isLink = false
     let link = ''
 
-    const innerHTML = []
+    const innerHTML: any[] = []
 
     each(words, (word) => {
       if (!isLink && (word.includes('<a') || word.includes('<strong'))) {
