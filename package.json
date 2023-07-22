@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "ampt:build": "webpack --progress --config webpack.config.prod.js",
+    "ampt:build": "webpack --progress --config webpack.config.prod.js --stats-error-details",
     "backend:build": "ts-node --esm app.ts",
     "backend:development": "nodemon app.ts",
-    "frontend:build": "webpack --progress --config webpack.config.dev.js --stats-error-details",
+    "frontend:build": "webpack --progress --config webpack.config.dev.js",
     "frontend:development": "webpack serve --progress --config webpack.config.dev.js",
     "start": "concurrently --kill-others \"npm run backend:development\" \"npm run frontend:development\""
   },
