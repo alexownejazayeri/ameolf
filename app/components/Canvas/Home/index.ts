@@ -1,4 +1,4 @@
-import { Plane, Transform } from 'ogl'
+import { Plane, Transform } from 'ogl-typescript'
 import GSAP from 'gsap'
 
 import map from 'lodash/map'
@@ -6,6 +6,21 @@ import map from 'lodash/map'
 import Media from './Media'
 
 export default class {
+  gl: any
+  scene: any
+  sizes: any
+  group: Transform
+  galleryElement: any
+  mediasElements: NodeListOf<Element>
+  x: { current: number; direction: string; target: number; lerp: number }
+  y: { current: number; direction: string; target: number; lerp: number }
+  scrollCurrent: { x: number; y: number }
+  scroll: { x: number; y: number }
+  speed: { current: number; direction: string; target: number; lerp: number }
+  geometry: Plane
+  medias: Media[]
+  galleryBounds: any
+  gallerySizes: { height: number; width: number }
   constructor ({ gl, scene, sizes }) {
     this.gl = gl
     this.scene = scene
@@ -18,12 +33,14 @@ export default class {
 
     this.x = {
       current: 0,
+      direction: '',
       target: 0,
       lerp: 0.1
     }
 
     this.y = {
       current: 0,
+      direction: '',
       target: 0,
       lerp: 0.1
     }
@@ -40,6 +57,7 @@ export default class {
 
     this.speed = {
       current: 0,
+      direction: '',
       target: 0,
       lerp: 0.1
     }

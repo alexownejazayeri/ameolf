@@ -23,10 +23,12 @@ const dirStyles = path.join(__dirname, 'styles')
 const dirNode = 'node_modules'
 
 module.exports = {
-  entry: [path.join(dirApp, 'index.js'), path.join(dirStyles, 'index.scss')],
+  entry: [path.join(dirApp, 'index.ts'), path.join(dirStyles, 'index.scss')],
+
   // Makes import/export clean
   resolve: {
-    modules: [dirApp, dirShared, dirStyles, dirNode]
+    modules: [dirApp, dirShared, dirStyles, dirNode],
+    extensions: ['.ts', '.js', '.glsl']
   },
 
   plugins: [
@@ -78,6 +80,10 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
+        test: /\.ts$/,
+        loader: 'ts-loader'
+      },
+      {
         test: /\.scss$/,
         use: [
           {
@@ -124,15 +130,19 @@ module.exports = {
 
       {
         test: /\.(glsl|frag|vert)$/,
-        loader: 'raw-loader',
-        exclude: /node_modules/
-      },
-
-      {
-        test: /\.(glsl|frag|vert)$/,
-        loader: 'glslify-loader',
+        use: ['raw-loader', 'glslify-loader'],
         exclude: /node_modules/
       }
+
+      // {
+      //   test: /\.(glsl|frag|vert)$/,
+      //   loader: 'glslify-loader',
+      //   exclude: /node_modules/
+      // }
+      // {
+      //   test: /\.(glsl|vs|fs)$/,
+      //   loader: 'ts-shader-loader'
+      // }
     ]
   }
 }

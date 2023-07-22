@@ -1,6 +1,8 @@
-import Component from 'classes/Component'
+import Component from '../classes/Component'
 
 export default class Animation extends Component {
+  element: any
+  observer: IntersectionObserver
   constructor ({ element, elements }) {
     super({
       element,

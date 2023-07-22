@@ -1,10 +1,27 @@
-import { Mesh, Program } from 'ogl'
 import GSAP from 'gsap'
-
-import fragment from 'shaders/home-fragment.glsl'
-import vertex from 'shaders/home-vertex.glsl'
+import { Mesh, Program } from 'ogl-typescript'
+// @ts-ignore
+import fragment from '../../../shaders/collections-fragment.glsl'
+// @ts-ignore
+import vertex from '../../../shaders/collections-vertex.glsl'
 
 export default class {
+  element: any
+  geometry: any
+  gl: any
+  index: any
+  scene: any
+  sizes: any
+  extra: { x: number; y: number }
+  opacity: { current: number; target: number; lerp: number; multiplier: number }
+  texture: any
+  program: Program
+  mesh: Mesh
+  bounds: any
+  height: number
+  width: number
+  x: number
+  y: number
   constructor ({ element, geometry, gl, index, scene, sizes }) {
     this.element = element
     this.geometry = geometry
@@ -12,9 +29,17 @@ export default class {
     this.index = index
     this.scene = scene
     this.sizes = sizes
+
     this.extra = {
       x: 0,
       y: 0
+    }
+
+    this.opacity = {
+      current: 0,
+      target: 0,
+      lerp: 0.1,
+      multiplier: 0
     }
 
     this.createTexture()
@@ -26,7 +51,7 @@ export default class {
   }
 
   createTexture () {
-    const image = this.element
+    const image = this.element.querySelector('.collections__gallery__media__image')
 
     this.texture = window.TEXTURES[image.getAttribute('data-src')]
   }
@@ -37,8 +62,6 @@ export default class {
       vertex,
       uniforms: {
         uAlpha: { value: 0 },
-        uSpeed: { value: 0 },
-        uViewportSizes: { value: [this.sizes.width, this.sizes.height] },
         tMap: { value: this.texture }
       }
     })
@@ -51,8 +74,6 @@ export default class {
     })
 
     this.mesh.setParent(this.scene)
-
-    this.mesh.rotation.z = GSAP.utils.random(-Math.PI * 0.03, Math.PI * 0.03)
   }
 
   createBounds ({ sizes }) {
@@ -69,16 +90,16 @@ export default class {
    * Animations.
    */
   show () {
-    GSAP.fromTo(this.program.uniforms.uAlpha, {
-      value: 0
+    GSAP.fromTo(this.opacity, {
+      multiplier: 0
     }, {
-      value: 0.4
+      multiplier: 1
     })
   }
 
   hide () {
-    GSAP.to(this.program.uniforms.uAlpha, {
-      value: 0
+    GSAP.to(this.opacity, {
+      multiplier: 0
     })
   }
 
@@ -119,10 +140,18 @@ export default class {
     this.mesh.position.y = (this.sizes.height / 2) - (this.mesh.scale.y / 2) - (this.y * this.sizes.height) + this.extra.y
   }
 
-  update (scroll, speed) {
-    this.updateX(scroll.x)
-    this.updateY(scroll.y)
+  update (scroll, index) {
+    this.updateX(scroll)
 
-    this.program.uniforms.uSpeed.value = speed
+    const amplitude = 0.1
+    const frequency = 1
+
+    this.mesh.rotation.z = -0.02 * Math.PI * Math.sin(this.index / frequency)
+    this.mesh.position.y = amplitude * Math.sin(this.index / frequency)
+
+    this.opacity.target = index === this.index ? 1 : 0.4
+    this.opacity.current = GSAP.utils.interpolate(this.opacity.current, this.opacity.target, this.opacity.lerp)
+
+    this.program.uniforms.uAlpha.value = this.opacity.multiplier * this.opacity.current
   }
 }

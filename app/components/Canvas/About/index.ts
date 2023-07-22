@@ -1,10 +1,16 @@
-import { Plane, Transform } from 'ogl'
+import { Plane, Transform } from 'ogl-typescript'
 
 import map from 'lodash/map'
 
 import Gallery from './Gallery'
 
 export default class {
+  gl: any
+  sizes: any
+  group: Transform
+  geometry: Plane
+  galleriesElements: NodeListOf<Element>
+  galleries: Gallery[]
   constructor ({ gl, scene, sizes }) {
     this.gl = gl
     this.sizes = sizes

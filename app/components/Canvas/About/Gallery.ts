@@ -1,4 +1,4 @@
-import { Transform } from 'ogl'
+import { Transform } from 'ogl-typescript'
 
 import map from 'lodash/map'
 import GSAP from 'gsap'
@@ -6,7 +6,21 @@ import GSAP from 'gsap'
 import Media from './Media'
 
 export default class Gallery {
-  constructor ({ element, geometry, index, gl, scene, sizes }) {
+  element: any
+  elementWrapper: any
+  geometry: any
+  index: any
+  gl: any
+  scene: any
+  sizes: any
+  group: Transform
+  scroll: { current: number; target: number; start: number; last: number; lerp: number; velocity: number }
+  mediasElements: any
+  medias: Media[]
+  bounds: any
+  width: number
+  direction: string
+  constructor ({ element, geometry, index, gl, scene, sizes }: {element: any; geometry: any; index: any; gl: any; scene: any; sizes: any;}) {
     this.element = element
     this.elementWrapper = element.querySelector('.about__gallery__wrapper')
 
