@@ -24,6 +24,7 @@ export default class Canvas {
   isFromCollectionsToDetail: boolean;
   isFromDetailToCollections: boolean;
   isDown: boolean;
+
   constructor({ template }) {
     this.template = template;
 
@@ -118,7 +119,6 @@ export default class Canvas {
     if (!this.collections) return;
 
     this.collections.destroy();
-    // this.collections = null TODO(alex): come back to this
   }
 
   /**
