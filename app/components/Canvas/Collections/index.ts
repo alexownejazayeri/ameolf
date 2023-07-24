@@ -202,7 +202,6 @@ export default class {
 
     const index = Math.floor(Math.abs((this.scroll.current - (this.medias[0].bounds.width / 2)) / this.scroll.limit) * (this.medias.length - 1))
 
-    console.log({index})
     if (this.index !== index && !Number.isNaN(index) && index !== Infinity) {
       this.onChange(index)
     }

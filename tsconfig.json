@@ -10,7 +10,7 @@
     "noEmitOnError": false,
     "removeComments": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "strictPropertyInitialization": false,
   },
   "include": ["app.ts"],

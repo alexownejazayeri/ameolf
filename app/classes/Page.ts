@@ -187,7 +187,6 @@ export default class Page {
    */
 
   onResize() {
-    console.log({ elements: this.elements });
     if (this.elements.wrapper) {
       this.scroll.limit =
         this.elements.wrapper.clientHeight - window.innerHeight;
