@@ -1,5 +1,6 @@
 import GSAP from 'gsap'
 import { Mesh, Program, Texture } from 'ogl-typescript'
+
 // @ts-ignore
 import fragment from '../../../shaders/collections-fragment.glsl'
 // @ts-ignore

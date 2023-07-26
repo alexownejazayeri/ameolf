@@ -101,6 +101,7 @@ export default class {
       })
     })
   }
+
   /**
    * Animations.
    */
@@ -120,6 +121,7 @@ export default class {
       }, _ => {
 
         if (media) {
+
           media.opacity.multiplier = 1
         }
 

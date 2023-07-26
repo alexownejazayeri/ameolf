@@ -4,7 +4,6 @@ import About from "./About";
 import Collections from "./Collections";
 import Detail from "./Detail";
 import Home from "./Home";
-
 import Transition from "../Transition";
 
 export default class Canvas {

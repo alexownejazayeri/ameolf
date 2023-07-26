@@ -11,6 +11,7 @@ declare global {
   }
 }
 
+
 declare global {
   interface Window {
       ASSETS: string[];
