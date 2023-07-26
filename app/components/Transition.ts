@@ -2,9 +2,9 @@ import { Mesh, Plane, Program } from 'ogl-typescript'
 import GSAP from 'gsap'
 
 // @ts-ignore
-import fragment from '../../shaders/plane-fragment.glsl'
+import fragment from '../shaders/plane-fragment.glsl'
 // @ts-ignore
-import vertex from '../../shaders/plane-vertex.glsl'
+import vertex from '../shaders/plane-vertex.glsl'
 
 
 export default class {

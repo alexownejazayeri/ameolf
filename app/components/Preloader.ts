@@ -2,7 +2,6 @@ import { Texture } from 'ogl-typescript'
 import GSAP from 'gsap'
 
 import Component from '../classes/Component'
-
 import { split } from '../utils/text'
 
 declare global {
@@ -11,6 +10,7 @@ declare global {
       TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
   }
 }
+
 export default class Preloader extends Component {
   canvas: any
   length: number

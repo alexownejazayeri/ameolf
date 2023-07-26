@@ -112,7 +112,7 @@ export default class {
         scale: media?.mesh.scale
       }, _ => {
 
-        if (media?.opacity.multiplier) {
+        if (media) {
           media.opacity.multiplier = 1
         }
 
