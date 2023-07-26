@@ -118,6 +118,16 @@ module.exports = {
         use: ['raw-loader', 'glslify-loader'],
         exclude: /node_modules/
       }
+
+      // {
+      //   test: /\.(glsl|frag|vert)$/,
+      //   loader: 'glslify-loader',
+      //   exclude: /node_modules/
+      // }
+      // {
+      //   test: /\.(glsl|vs|fs)$/,
+      //   loader: 'ts-shader-loader'
+      // }
     ]
   }
 }

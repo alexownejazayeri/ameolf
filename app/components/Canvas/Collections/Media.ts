@@ -29,6 +29,22 @@ export default class {
   width: number
   x: number
   y: number
+  element: any
+  geometry: any
+  gl: any
+  index: any
+  scene: any
+  sizes: any
+  extra: { x: number; y: number }
+  opacity: { current: number; target: number; lerp: number; multiplier: number }
+  texture: any
+  program: Program
+  mesh: Mesh
+  bounds: any
+  height: number
+  width: number
+  x: number
+  y: number
   constructor ({ element, geometry, gl, index, scene, sizes }) {
     this.element = element
     this.geometry = geometry
