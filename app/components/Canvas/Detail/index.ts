@@ -59,7 +59,7 @@ export default class {
       fragment,
       vertex,
       uniforms: {
-        uAlpha: { value: 1 },
+        uAlpha: { value: 0 },
         tMap: { value: this.texture }
       }
     })
