@@ -93,7 +93,6 @@ export default class {
       })
     })
   }
-
   /**
    * Animations.
    */
