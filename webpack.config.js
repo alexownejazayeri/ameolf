@@ -104,22 +104,7 @@ module.exports = {
           }
         ]
       },
-      // {
-      // webp is google's optimized img format
-      // good for webgl textures using webp
-      // test: /\.(jpe?g|png|svg|woff2?|fnt|webp)$/,
-      // loader: 'file-loader',
-      // options: {
-      // in order to prevent outdated images on frontend
-      // due to caching, use a hash so the cache knows its new
-      // name (file) {
-      //   return '[hash].[ext]'
-      // }
-      // can change output file name
-      // based on which file is tested
-      // e.g.(image, fonts, etc.)
-      //   }
-      // },
+
       {
         test: /\.(png|jpg|gif|jpe?g|svg|woff2?|fnt|webp|mp4)$/,
         type: 'asset/resource',
