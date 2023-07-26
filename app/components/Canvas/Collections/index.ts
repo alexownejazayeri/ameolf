@@ -13,6 +13,13 @@ declare global {
   }
 }
 
+declare global {
+  interface Window {
+      ASSETS: string[];
+      TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
+  }
+}
+
 export default class {
   id: string
   gl: any
@@ -112,7 +119,7 @@ export default class {
         scale: media?.mesh.scale
       }, _ => {
 
-        if (media?.opacity.multiplier) {
+        if (media) {
           media.opacity.multiplier = 1
         }
 

@@ -4,8 +4,8 @@ export default class Collections extends Page {
   constructor () {
     super({
       id: 'collections',
-      element: '.collections',
-      elements: ''
+      element: '.collections', // TODO(alex): consider renaming this 'selector'
+      elements: {}
     })
   }
 }
