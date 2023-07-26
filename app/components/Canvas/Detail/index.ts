@@ -1,10 +1,17 @@
 import GSAP from 'gsap'
-import { Mesh, Plane, Program } from 'ogl-typescript'
+import { Mesh, Plane, Program, Texture } from 'ogl-typescript'
 
 // @ts-ignore
 import fragment from '../../../shaders/plane-fragment.glsl'
 // @ts-ignore
 import vertex from '../../../shaders/plane-vertex.glsl'
+
+declare global {
+  interface Window {
+      ASSETS: string[];
+      TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
+  }
+}
 
 export default class {
   id: string
@@ -22,6 +29,7 @@ export default class {
   width: number
   x: number
   y: number
+
   constructor ({ gl, scene, sizes, transition }) {
     this.id = 'detail'
     this.element = document.querySelector('.detail__media__image')
@@ -52,7 +60,7 @@ export default class {
       fragment,
       vertex,
       uniforms: {
-        uAlpha: { value: 1 },
+        uAlpha: { value: 0 },
         tMap: { value: this.texture }
       }
     })

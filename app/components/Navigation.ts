@@ -1,5 +1,4 @@
 import GSAP from 'gsap'
-
 import Component from '../classes/Component'
 
 import { COLOR_BRIGHT_GRAY, COLOR_QUARTER_SPANISH_WHITE } from '../utils/colors'

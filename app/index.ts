@@ -71,9 +71,7 @@ class App {
    */
   onPreloaded() {
     this.onResize();
-
     this.canvas.onPreloaded();
-
     this.page.show();
   }
 
@@ -125,7 +123,8 @@ class App {
     }
   }
 
-  onResize() {
+  onResize () {
+
     if (this.page && this.page.onResize) {
       this.page.onResize();
     }

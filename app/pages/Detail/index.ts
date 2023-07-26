@@ -27,7 +27,7 @@ export default class Detail extends Page {
 
   show () {
     const timeline = GSAP.timeline({
-      delay: 2
+      delay: 1
     })
 
     timeline.fromTo(this.element, {

@@ -1,9 +1,17 @@
 import GSAP from 'gsap'
-import { Mesh, Program } from 'ogl-typescript'
+import { Mesh, Program, Texture } from 'ogl-typescript'
+
 // @ts-ignore
 import fragment from '../../../shaders/collections-fragment.glsl'
 // @ts-ignore
 import vertex from '../../../shaders/collections-vertex.glsl'
+
+declare global {
+  interface Window {
+      ASSETS: string[];
+      TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
+  }
+}
 
 export default class {
   element: any

@@ -13,6 +13,13 @@ declare global {
   }
 }
 
+declare global {
+  interface Window {
+      ASSETS: string[];
+      TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
+  }
+}
+
 export default class {
   id: string
   gl: any
@@ -32,6 +39,7 @@ export default class {
   medias: Media[]
   bounds: any
   index: any
+
   constructor ({ gl, scene, sizes, transition }) {
     this.id = 'collections'
 
@@ -112,7 +120,8 @@ export default class {
         scale: media?.mesh.scale
       }, _ => {
 
-        if (media?.opacity.multiplier) {
+        if (media) {
+
           media.opacity.multiplier = 1
         }
 
@@ -202,7 +211,6 @@ export default class {
 
     const index = Math.floor(Math.abs((this.scroll.current - (this.medias[0].bounds.width / 2)) / this.scroll.limit) * (this.medias.length - 1))
 
-    console.log({index})
     if (this.index !== index && !Number.isNaN(index) && index !== Infinity) {
       this.onChange(index)
     }
