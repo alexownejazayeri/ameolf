@@ -1,4 +1,5 @@
 import { Texture } from 'ogl-typescript'
+import { Texture } from 'ogl-typescript'
 import GSAP from 'gsap'
 
 import Component from '../classes/Component'
@@ -11,7 +12,16 @@ declare global {
   }
 }
 
+declare global {
+  interface Window {
+      ASSETS: string[];
+      TEXTURES: Texture | {}; // TODO(alex): account for a dynamic object in this type
+  }
+}
 export default class Preloader extends Component {
+  canvas: any
+  length: number
+  animateOut: gsap.core.Timeline;
   canvas: any
   length: number
   animateOut: gsap.core.Timeline;
