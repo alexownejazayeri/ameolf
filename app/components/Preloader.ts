@@ -1,5 +1,4 @@
 import { Texture } from 'ogl-typescript'
-import { Texture } from 'ogl-typescript'
 import GSAP from 'gsap'
 
 import Component from '../classes/Component'
@@ -22,9 +21,7 @@ export default class Preloader extends Component {
   canvas: any
   length: number
   animateOut: gsap.core.Timeline;
-  canvas: any
-  length: number
-  animateOut: gsap.core.Timeline;
+
   constructor ({ canvas }) {
     super({
       element: '.preloader',

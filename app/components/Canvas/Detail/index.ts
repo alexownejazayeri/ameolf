@@ -29,21 +29,7 @@ export default class {
   width: number
   x: number
   y: number
-  id: string
-  element: any
-  gl: any
-  scene: any
-  sizes: any
-  transition: any
-  geometry: Plane
-  texture: any
-  program: Program
-  mesh: Mesh
-  bounds: any
-  height: number
-  width: number
-  x: number
-  y: number
+
   constructor ({ gl, scene, sizes, transition }) {
     this.id = 'detail'
     this.element = document.querySelector('.detail__media__image')
@@ -132,16 +118,13 @@ export default class {
   }
 
   onTouchDown (values: any) {
-  onTouchDown (values: any) {
 
   }
 
   onTouchMove (values: any) {
-  onTouchMove (values: any) {
 
   }
 
-  onTouchUp (values: any) {
   onTouchUp (values: any) {
 
   }
